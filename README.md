@@ -1,45 +1,33 @@
-# Nuts
+# nuts with dotenv support
 
-Nuts is a simple (and smart) application to serve desktop-application releases.
+This fork is not meant for public distrubution. Play with it at your own risk.\
+(we've made this just for our internal use.)\
+\
+Not much has been added, it just contains dotenv support and our private startup scripts which hardcodes env & process names.
 
-![Schema](./docs/schema.png)
+# env file names
 
-It uses GitHub as a backend to store assets, and it can easily be deployed to Heroku as a stateless service. It supports GitHub private repositories (useful to store releases of a closed-source application available on GitHub).
+- `.env.blm` for `box-label-manager`.
+- `.env.plm` for `package-label-manager`.
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+# Github Webhook Settings
 
-#### Features
+- NOTE: Content Type has to be `application/json`. Default value is `application/x-www-form-urlencoded`.
+- install pm2 globally to use startup scripts (npm install -g pm2).
 
-- :sparkles: Store assets on GitHub releases
-- :sparkles: Proxy releases from private repositories to your users
-- :sparkles: Simple but powerful download urls
-    - `/download/latest`
-    - `/download/latest/:os`
-    - `/download/:version`
-    - `/download/:version/:os`
-    - `/download/channel/:channel`
-    - `/download/channel/:channel/:os`
-- :sparkles: Support pre-release channels (`beta`, `alpha`, ...)
-- :sparkles: Auto-updates with [Squirrel](https://github.com/Squirrel)
-    - For Mac using `/update?version=<x.x.x>&platform=osx`
-    - For Windows using Squirrel.Windows and Nugets packages
-- :sparkles: Private API
-- :sparkles: Use it as a middleware: add custom analytics, authentication
-- :sparkles: Serve the perfect type of assets: `.zip` for Squirrel.Mac, `.nupkg` for Squirrel.Windows, `.dmg` for Mac users, ...
-- :sparkles: Release notes endpoint
-    - `/notes/:version`
-- :sparkles: Up-to-date releases (GitHub webhooks)
-- :sparkles: Atom/RSS feeds for versions/channels
+# Daemonize instances with pm2
 
-#### Deploy it / Start it
+- Start process: `pm2 start "bin/web.js" --name <uid>` (or use startup scripts). 
+- Save process info: `pm2 save`.
+- Install startup script: `pm2 startup` (You don't need sudo for this.)
 
-[Follow our guide to deploy Nuts](https://nuts.gitbook.com/deploy.html).
+# Endpoints
 
-
-#### Auto-updater / Squirrel
-
-This server provides an endpoint for [Squirrel auto-updater](https://github.com/atom/electron/blob/master/docs/api/auto-updater.md), it supports both [OS X](https://nuts.gitbook.com/update-osx.html) and [Windows](https://nuts.gitbook.com/update-windows.html).
+- Apparently README in the original repo is pretty off the actual implementation.
+- Download latest: `/download/windows`
+- Autoupdater target path: `/update/${process.platform}/${app.getVersion()}`
+- Github Webhook target: `/refresh`
 
 #### Documentation
 
-[Check out the documentation](https://nuts.gitbook.com) for more details.
+[Check out the official documentation](https://nuts.gitbook.com) for more details.
